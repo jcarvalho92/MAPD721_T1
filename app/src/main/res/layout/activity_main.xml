@@ -41,7 +41,6 @@
         android:layout_height="570dp"
         android:layout_marginTop="28dp"
         android:lineSpacingExtra="24sp"
-        android:text="Hi \nHow are you?"
         android:textAlignment="viewStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textSize="24sp"
