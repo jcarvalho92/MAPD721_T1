@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MAPD721_T1_JulianaDeCarvalho">
+
         <service
-            android:name=".ChatBotService"
+            android:name=".service.ChatBotService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -10,18 +10,28 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.JDC.bot.service.ChatBotService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     TextView messages;
-
+    List<String> chatMessages = new ArrayList<>();
+    int i = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        chatMessages.add("Hello "+ ChatBotService.NAME+"!");
+        chatMessages.add("How are you?");
+        chatMessages.add("Good Bye "+ChatBotService.NAME+"!");
+
+        //Getting a reference
+        messages = findViewById(R.id.txtMessages);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("SERVICE_RESPONSE_GENERATE_MESSAGE");
@@ -30,16 +40,24 @@ public class MainActivity extends AppCompatActivity {
         Button btnGenerateMsg = (Button) findViewById(R.id.btnGenerateMsg);
         btnGenerateMsg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //Getting a reference
-                messages = findViewById(R.id.txtMessages);
 
-                Bundle data = new Bundle();
-                data.putInt(ChatBotService.CMD, ChatBotService.CMD_GENERATE_MSG);
-                data.putString(ChatBotService.MESSAGE_TEXT, "Hello!");
-                Intent intent = new Intent(getApplicationContext(), ChatBotService.class);
-                intent.putExtras(data);
-                startService(intent);
+                generateMessage(chatMessages.get(i));
 
+                if(i == chatMessages.size() - 1){
+                    i = 0;
+                }
+                else{
+                    i++;
+                }
+
+            }
+        });
+
+        Button btnStopService = (Button) findViewById(R.id.btnStopService);
+        btnStopService.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                stopService();
             }
         });
     }
@@ -66,4 +84,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+
+    private void generateMessage(String messageText){
+        Bundle data = new Bundle();
+        data.putInt(ChatBotService.CMD, ChatBotService.CMD_GENERATE_MSG);
+        data.putString(ChatBotService.MESSAGE_TEXT, messageText);
+
+        Intent intent = new Intent(getApplicationContext(), ChatBotService.class);
+        intent.putExtras(data);
+        startService(intent);
+    }
+
+    private void stopService(){
+        Bundle data = new Bundle();
+        data.putInt(ChatBotService.CMD, ChatBotService.CMD_STOP_SERVICE);
+
+        Intent intent = new Intent(getApplicationContext(), ChatBotService.class);
+        intent.putExtras(data);
+        startService(intent);
+    }
 }
